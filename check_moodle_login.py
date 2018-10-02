@@ -9,7 +9,7 @@ __author__ = "Niels Gandraß"
 __email__ = "ngandrass@squacu.de"
 __copyright__ = "Copyright 2018, Niels Gandraß"
 __license__ = "MIT License"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 import sys
 import requests
@@ -31,10 +31,10 @@ try:
     })
 
     if login_request.status_code == 200 and login_request.url.endswith("/my/"):
-        print("OK - Login successful")
+        print("OK - Login as", args.username, "successful")
         sys.exit(0)
     elif login_request.status_code == 200 and not login_request.url.endswith("/my/"):
-        print("CRITICAL - Login failed")
+        print("CRITICAL - Login as", args.username, "failed")
         sys.exit(2)
     else:
         print("UNKNOWN - Status code: ", login_request.status_code)
