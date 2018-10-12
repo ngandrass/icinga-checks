@@ -9,7 +9,7 @@ __author__ = "Niels Gandraß"
 __email__ = "ngandrass@squacu.de"
 __copyright__ = "Copyright 2018, Niels Gandraß"
 __license__ = "MIT License"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 import sys
 import requests
@@ -30,14 +30,19 @@ try:
         'password': args.password
     })
 
-    if login_request.status_code == 200 and login_request.url.endswith("/my/"):
+    sc = login_request.status_code
+
+    if sc == 200 and login_request.url.endswith("/my/"):
         print("OK - Login as", args.username, "successful")
         sys.exit(0)
-    elif login_request.status_code == 200 and not login_request.url.endswith("/my/"):
+    elif sc == 200 and not login_request.url.endswith("/my/"):
         print("CRITICAL - Login as", args.username, "failed")
         sys.exit(2)
+    elif (400 <= sc <= 405) or (500 <= sc <= 504):
+        print("CRITICAL - Failed with HTTP status code", sc)
+        sys.exit(2)
     else:
-        print("UNKNOWN - Status code: ", login_request.status_code)
+        print("UNKNOWN - Received HTTP status code: ", login_request.status_code)
         sys.exit(3)
 
 except Exception as e:
