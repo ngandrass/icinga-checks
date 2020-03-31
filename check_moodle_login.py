@@ -9,7 +9,7 @@ __author__ = "Niels Gandraß"
 __email__ = "ngandrass@squacu.de"
 __copyright__ = "Copyright 2018, Niels Gandraß"
 __license__ = "MIT License"
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 
 import sys
 import requests
@@ -44,14 +44,17 @@ def exit(verdict: IcingaVerdict, *msgs: str) -> None:
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--target', required=True, help='URL of the Moodle installation')
-    parser.add_argument('-u', '--username', required=True, help='Username to use for authentication')
-    parser.add_argument('-p', '--password', required=True, help='Password to use for authentication')
-    parser.add_argument('-s', '--skip-logintoken', required=False, help='Ignore moodle logintoken', action='store_true')
+    parser.add_argument('-t', '--target', required=True, dest='target', help='URL of the Moodle installation')
+    parser.add_argument('-u', '--username', required=True, dest='username', help='Username to use for authentication')
+    parser.add_argument('-p', '--password', required=True, dest='password', help='Password to use for authentication')
+    parser.add_argument('-U', '--http-username', required=False, dest='http_username', help='Username to use for HTTP basic authentication')
+    parser.add_argument('-P', '--http-password', required=False, dest='http_password', help='Password to use for HTTP basic authentication')
+    parser.add_argument('-s', '--skip-logintoken', required=False, dest='skip_logintoken', help='Ignore moodle logintoken', action='store_true')
     args = parser.parse_args()
 
     # Initiate common session in order to supply a valid login token
     s = requests.Session()
+    s.auth = requests.auth.HTTPBasicAuth(args.http_username, args.http_password) if args.http_username else None
 
     # Get login token
     logintoken = ""
