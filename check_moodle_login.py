@@ -67,7 +67,7 @@ def main():
                 else:
                     logintoken = logintoken_input.group(1)
             else:
-                exit(IcingaVerdict.UNKNOWN, "Received HTTP status code during token request:", token_request.status_code)
+                exit(IcingaVerdict.UNKNOWN, "Received HTTP status code during token request:", str(token_request.status_code))
 
         except Exception as e:
             exit(IcingaVerdict.UNKNOWN, "Exception raised during token request:", type(e).__name__)
@@ -88,9 +88,9 @@ def main():
         elif sc == 200 and not login_request.url.endswith("/my/"):
             exit(IcingaVerdict.CRITICAL, "Login as", args.username, "failed")
         elif (400 <= sc <= 405) or (500 <= sc <= 504):
-            exit(IcingaVerdict.CRITICAL, "Failed with HTTP status code", sc)
+            exit(IcingaVerdict.CRITICAL, "Failed with HTTP status code", str(sc))
         else:
-            exit(IcingaVerdict.UNKNOWN, "Received HTTP status code:", sc)
+            exit(IcingaVerdict.UNKNOWN, "Received HTTP status code:", str(sc))
 
     except Exception as e:
         exit(IcingaVerdict.UNKNOWN, "Exception raised during login:", type(e).__name__)
